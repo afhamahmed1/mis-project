@@ -55,6 +55,7 @@ include_once('includes/header.php');
                           
                             $user_id = $_GET['id'];
                             $report = employee_report($user_id);
+                            if(mysqli_num_rows($report )> 0){
                             while($row = mysqli_fetch_assoc($report))
                             {
 
@@ -69,7 +70,15 @@ include_once('includes/header.php');
                             </tr>
                             <?php
                             }
+                          }else{
+                            ?>
+                            <tr>
+                              <td class ="text-center" colspan="5" style="height: 300px;" >No Data Found</td>
+                              
+                            </tr>
+                            <?php
                           }
+                        }
                           ?>
 
                         </tbody>

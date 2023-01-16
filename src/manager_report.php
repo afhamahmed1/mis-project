@@ -50,6 +50,7 @@ include_once('includes/header.php');
                         <tbody class="table-border-bottom-0">
                           <?php
                           $report = manager_report();
+                          if(mysqli_num_rows($report)){
                           while($row = mysqli_fetch_assoc($report))
                           {
 
@@ -63,6 +64,13 @@ include_once('includes/header.php');
                             <td>$<?= $row['extended_price'] ?></td>
                           </tr>
                           <?php
+                          }}else{
+                            ?>
+                            <tr>
+                              <td class ="text-center" colspan="5" style="height: 300px;" >No Data Found</td>
+                              
+                            </tr>
+                            <?php
                           }
                           ?>
                           

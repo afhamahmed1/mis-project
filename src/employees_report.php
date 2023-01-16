@@ -47,36 +47,24 @@ include_once('includes/header.php');
                           </tr>
                         </thead>
                         <tbody class="table-border-bottom-0 employee_report_table">
-                       
-                          <tr value="1">
+                          <?php
+                            $sales_persons  = fetchSalesStaffData();
+                             
+                            while($row = mysqli_fetch_assoc($sales_persons))
+                            {
+
+                          ?>
+                          <tr value="<?= $row['id'] ?>">
                             
-                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>1</strong></td>
-                            <td>Transistors</td>
-                            <td>56</td>
-                            <td>$30</td>
-                            
-                          </tr>
-                          <tr value="2">
-                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>2</strong></td>
-                            <td>Wiring</td>
-                            <td>89</td>
-                            <td>$10</td>
-                            
-                          </tr>
-                          <tr value="3">
-                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>3</strong></td>
-                            <td>Chip 1</td>
-                            <td>90</td>
-                            <td>$49</td>
-                           
-                          </tr>
-                          <tr value="4">
-                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>4</strong></td>
-                            <td>Chip 2</td>
-                            <td>100</td>
-                            <td>$57</td>
+                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?= $row['id'] ?></strong></td>
+                            <td><?= $row['name'] ?></td>
+                            <td><?= $row['monthly_sales'] ?></td>
+                            <td><?= $row['monthly_target'] ?></td>
                             
                           </tr>
+                          <?php 
+                            }
+                          ?>
                           
                         </tbody>
                       </table>

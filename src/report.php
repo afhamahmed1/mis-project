@@ -51,6 +51,7 @@ include_once('includes/header.php');
                           <?php 
                           $user_id = $_SESSION['auth_user']['userid'];
                           $report = employee_report($user_id);
+                          if(mysqli_num_rows($report)){
                           while($row = mysqli_fetch_assoc($report))
                           {
 
@@ -64,6 +65,13 @@ include_once('includes/header.php');
                             <td>$<?= $row['extended_price'] ?></td>
                           </tr>
                           <?php
+                          }}else{
+                            ?>
+                            <tr>
+                              <td class ="text-center" colspan="5" style="height: 300px;" >No Data Found</td>
+                              
+                            </tr>
+                            <?php
                           }
                           ?>
                           

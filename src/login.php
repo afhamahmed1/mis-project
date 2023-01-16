@@ -125,9 +125,9 @@ include_once('includes/header.php');
                 <div class="mb-3 form-password-toggle">
                   <div class="d-flex justify-content-between">
                     <label class="form-label" for="password">Password</label>
-                    <a href="forgot-password.php">
+                    <!-- <a href="forgot-password.php">
                       <small>Forgot Password?</small>
-                    </a>
+                    </a> -->
                   </div>
                   <div class="input-group input-group-merge">
                     <input

@@ -243,7 +243,7 @@ include_once('includes/header.php');
                       <tr>
                         <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?= $item['product_id'] ?></strong></td>
                         <td><?= $item['product_name'] ?></td>
-                        <td><?= ($item['product_quantity'] == 0) ? '<span class="badge bg-danger">out of stock</span>' : $item['product_quantity'] ;?></td>
+                        <td><?= ($item['product_quantity'] == 0) ? '<small class="badge bg-danger" style="font-size:12px">out of stock</small>' : $item['product_quantity'] ;?></td>
                         <td><?= $item['product_cost'] ?></td>
                         <td><?= $item['product_price'] ?></td>
                         <?php

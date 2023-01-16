@@ -116,6 +116,24 @@ function employee_report($id, $by = "MONTH"){
     return mysqli_query($conn, $view_query);
 }
 
+function fetchSalesStaffData(){
+    global $conn;
+    $view_query = "
+    SELECT 
+        emp.id, 
+        emp.name, 
+        COALESCE(SUM(products.price*order_items.quantity),0) AS monthly_sales,
+        emp.monthly_target
+    FROM (SELECT * FROM employees where status = 0) as emp
+    LEFT JOIN sales_order ON sales_order.employee_id = emp.id AND MONTH(sales_order.order_date)= MONTH(NOW())-1 AND YEAR(sales_order.order_date) = YEAR(NOW())
+    LEFT JOIN order_items ON order_items.sales_order_id = sales_order.id
+    LEFT JOIN products ON products.id = order_items.product_id
+    GROUP BY emp.id
+    ORDER BY emp.id;
+    ";
+    return mysqli_query($conn, $view_query);
+}
+
 
 function getAll($tablename)
 {
