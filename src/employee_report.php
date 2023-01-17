@@ -33,7 +33,9 @@ include_once('includes/header.php');
                     <div class="d-flex justify-content-between">
                       <h5 class="card-header">Report</h5>
                       <div class="my-3 me-4">
-                        <button class="btn btn-primary d-grid w-100" type="submit">Export</button>
+                        <a href="pdf_maker.php?EMP_ID=<?= $_GET['id']; ?>&ACTION=VIEW">
+                          <button class="btn btn-primary d-grid w-100 export_btn" type="submit">Export</button>
+                        </a>
                       </div>
                     </div>
                     <div class="table-responsive text-nowrap">
