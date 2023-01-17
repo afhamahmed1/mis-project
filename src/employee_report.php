@@ -74,7 +74,6 @@ include_once('includes/header.php');
                             ?>
                             <tr>
                               <td class ="text-center" colspan="5" style="height: 300px;" >No Data Found</td>
-                              
                             </tr>
                             <?php
                           }

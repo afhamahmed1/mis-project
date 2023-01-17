@@ -211,9 +211,15 @@ include_once('includes/header.php');
                 
                 <div class="d-flex justify-content-between">
                   <h5 class="card-header">INVENTORY</h5>
+                  <?php
+                        if( $_SESSION['role_as'] == '1') {
+                          ?>
                   <div class="my-3 me-4">
                     <a class="btn btn-primary d-grid w-100" href="add-item.php" >Add Item</a>
                   </div>
+                  <?php
+                        } 
+                        ?>
                 </div>
                 <div class="table-responsive text-nowrap">
                   <table class="table table-hover">
