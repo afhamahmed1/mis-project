@@ -33,8 +33,14 @@ include_once('includes/header.php');
                     <div class="d-flex justify-content-between">
                       <h5 class="card-header">Report</h5>
                       <div class="my-3 me-4">
-                        <button class="btn btn-primary d-grid w-100" type="submit">Export</button>
+                        <a href="pdf_maker.php?EMP_ID=<?= $_SESSION['auth_user']['userid']; ?>&ACTION=VIEW">
+                          <button class="btn btn-primary d-grid w-100 export_btn" type="submit">Export</button>
+                        </a>
                       </div>
+                    </div>
+                    <div class="mx-4">
+                      <?php $name=mysqli_fetch_assoc(getEmpNameById($_SESSION['auth_user']['userid'])); ?>
+                      <h6><strong>Employee Name:</strong> <?= $name['name'] ?></h6>
                     </div>
                     <div class="table-responsive text-nowrap">
                       <table class="table table-hover">
@@ -79,6 +85,18 @@ include_once('includes/header.php');
                       </table>
                     </div>
                   </div>
+                  <?php if(mysqli_num_rows($report )> 0): ?>
+                  <?php
+                  // mysqli_fetch_assoc($report);
+                  ?>
+                  <div class="card mt-3 px-3 py-2 d-flex" style="font-size: 13px;">
+                    <div class="col-sm-2 col-form-label"><strong>Monthly Sales:</strong> <?= 'XYZ' ?></div>
+                    <div class="col-sm-2 col-form-label"><strong>Annual Sales:</strong> <?= 'XYZ' ?></div>
+                    <div class="col-sm-2 col-form-label"><strong>Total orders:</strong> <?= 'XYZ' ?></div>
+                    <div class="col-sm-2 col-form-label"><strong>Total items sold:</strong> <?= 'XYZ' ?></div>
+                    <div class="col-sm-2 col-form-label"><strong>Commision:</strong> <?= 'XYZ' ?></div>
+                  </div>
+                  <?php endif; ?>
                 </div>
               </div>
             <!-- / Content -->
