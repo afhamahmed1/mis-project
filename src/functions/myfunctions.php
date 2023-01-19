@@ -81,7 +81,19 @@ function order_statistics(){
     return mysqli_query($conn, $view_query);
 }
 
-
+function getProfit($month=0)
+{
+    global $conn;
+    $view_query="
+    SELECT 
+        SUM(products.price*order_items.quantity) as extended_price
+    FROM order_items
+    JOIN products ON order_items.product_id = products.id
+    JOIN sales_order ON sales_order.id = order_items.sales_order_id
+    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE())-$month
+    AND YEAR(sales_order.order_date) = YEAR(CURDATE())-1;
+    ";
+}
 
 
 
