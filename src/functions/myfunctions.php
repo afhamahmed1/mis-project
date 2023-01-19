@@ -28,7 +28,18 @@ function revenue_on_month_bases($year){
     return mysqli_query($conn, $view_query);
 }
 
-
+function weeklySalesAndOrder(){
+    global $conn;
+    $view_query = 
+    "
+    SELECT COUNT(sales_order.id) AS total_orders, SUM(products.price*order_items.quantity) AS total_sales
+    FROM sales_order
+    JOIN order_items ON sales_order.id = order_items.sales_order_id
+    JOIN products on products.id = order_items.product_id
+    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()) AND YEAR(sales_order.order_date) = YEAR(CURDATE())
+    ";
+    return mysqli_query($conn, $view_query);
+}
 
 // function revenue_on_month_bases($year){
 //     global $conn;
@@ -51,18 +62,20 @@ function order_statistics(){
     SELECT 
     products.name AS product_name, 
     SUM(order_items.quantity) AS units_sold,
-    (SUM(order_items.quantity) / 
-        (SELECT SUM(quantity) FROM order_items 
+    SUM(products.price * order_items.quantity) AS unit_sales,
+    (SUM(order_items.quantity*products.price) / 
+        (SELECT SUM(order_items.quantity*products.price) FROM order_items 
         JOIN sales_order ON sales_order.id = order_items.sales_order_id
-        WHERE WEEK(sales_order.order_date) = WEEK(CURDATE()) 
+        JOIN products on products.id = order_items.product_id
+        WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()) 
         AND YEAR(sales_order.order_date) = YEAR(CURDATE())) * 100) AS percentage,
     employees.name AS employee
     FROM order_items
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     JOIN employees ON sales_order.employee_id = employees.id
-    WHERE WEEK(sales_order.order_date) = WEEK(CURDATE()) AND YEAR(sales_order.order_date) = YEAR(CURDATE())
-    GROUP BY order_items.product_id, employees.id
+    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()) AND YEAR(sales_order.order_date) = YEAR(CURDATE())
+    GROUP BY order_items.product_id
     ORDER BY percentage DESC
     ";
     return mysqli_query($conn, $view_query);
@@ -81,14 +94,14 @@ function order_statistics_of_employee($id){
     (SUM(order_items.quantity) / 
         (SELECT SUM(quantity) FROM order_items 
         JOIN sales_order ON sales_order.id = order_items.sales_order_id
-        WHERE WEEK(sales_order.order_date) = WEEK(CURDATE()) and employees.id = $id
+        WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()) and employees.id = $id
         AND YEAR(sales_order.order_date) = YEAR(CURDATE())) * 100) AS percentage,
     employees.name AS employee
     FROM order_items
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     JOIN employees ON sales_order.employee_id = employees.id
-    WHERE WEEK(sales_order.order_date) = WEEK(CURDATE()) AND YEAR(sales_order.order_date) = YEAR(CURDATE()) and employees.id = $id
+    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()) AND YEAR(sales_order.order_date) = YEAR(CURDATE()) and employees.id = $id
     GROUP BY order_items.product_id, employees.id
     ORDER BY percentage DESC
     ";
@@ -162,10 +175,6 @@ function getAll($tablename)
     return mysqli_query($conn, $view_query);
 }
 
-// function getEmpName() {
-
-// }
-
 function getBySection($tablename, $section_name)
 {
     global $conn;
@@ -191,13 +200,6 @@ function getById($tablename, $id)
 {
     global $conn;
     $view_query = "select * from $tablename where id = $id";
-    return (mysqli_query($conn, $view_query));
-}
-
-function getEmpNameById($id)
-{
-    global $conn;
-    $view_query = "select name from employees where id = $id";
     return (mysqli_query($conn, $view_query));
 }
 

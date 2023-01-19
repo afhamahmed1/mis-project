@@ -120,86 +120,51 @@ include_once('includes/header.php');
                     
                     <!-- </div>
                     <div class="row"> -->
+                    <?php
+                    $order_and_sales = weeklySalesAndOrder();
+                    $order_and_sales = mysqli_fetch_assoc($order_and_sales);
+                    $order_statistics = order_statistics();
 
+                    ?>
                     <div class="col-md-12 col-lg-12 col-xl-12 order-0 mb-4">
                         <div class="card">
                           <div class="card-header d-flex align-items-center justify-content-between pb-0">
                             <div class="card-title mb-0">
                               <h5 class="m-0 me-2">Order Statistics</h5>
-                              <small class="text-muted">42.82k Total Sales</small>
+                              <small class="text-muted"><?= $order_and_sales['total_sales'] ?> Total Sales</small>
                             </div>
                             
                           </div>
                           <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                               <div class="d-flex flex-column align-items-center gap-1">
-                                <h2 class="mb-2">8,258</h2>
+                                <h2 class="mb-2"><?= $order_and_sales['total_orders'] ?></h2>
                                 <span>Total Orders</span>
                               </div>
-                              <div id="orderStatisticsChart"></div>
+                              <input type="hidden" name="order_statistics" value='<?= json_encode(mysqli_fetch_all($order_statistics)) ?>'>
+                              <div id="orderStatisticsChart" value=""></div>
                             </div>
-                            <ul class="p-0 m-0">
-                              <li class="d-flex mb-4 pb-1">
-                                <div class="avatar flex-shrink-0 me-3">
-                                  <span class="avatar-initial rounded bg-label-primary"
-                                    ><i class="bx bx-mobile-alt"></i
-                                  ></span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                  <div class="me-2">
-                                    <h6 class="mb-0">Electronic</h6>
-                                    <small class="text-muted">Mobile, Earbuds, TV</small>
+                            <div style="height:130px; overflow:auto">
+                              <ul class="p-0 m-0">
+                                <?php
+                                  while($row = mysqli_fetch_assoc($order_statistics)){
+                                ?>
+                                <li class="d-flex mb-4 pb-1">
+                                  
+                                  <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                      <h6 class="mb-0"><?= $row['product_name'] ?></h6>
+                                    </div>
+                                    <div class="user-progress">
+                                      <small class="fw-semibold"><?= $row['unit_sales'] ?></small>
+                                    </div>
                                   </div>
-                                  <div class="user-progress">
-                                    <small class="fw-semibold">82.5k</small>
-                                  </div>
-                                </div>
-                              </li>
-                              <li class="d-flex mb-4 pb-1">
-                                <div class="avatar flex-shrink-0 me-3">
-                                  <span class="avatar-initial rounded bg-label-success"><i class="bx bx-closet"></i></span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                  <div class="me-2">
-                                    <h6 class="mb-0">Fashion</h6>
-                                    <small class="text-muted">T-shirt, Jeans, Shoes</small>
-                                  </div>
-                                  <div class="user-progress">
-                                    <small class="fw-semibold">23.8k</small>
-                                  </div>
-                                </div>
-                              </li>
-                              <li class="d-flex mb-4 pb-1">
-                                <div class="avatar flex-shrink-0 me-3">
-                                  <span class="avatar-initial rounded bg-label-info"><i class="bx bx-home-alt"></i></span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                  <div class="me-2">
-                                    <h6 class="mb-0">Decor</h6>
-                                    <small class="text-muted">Fine Art, Dining</small>
-                                  </div>
-                                  <div class="user-progress">
-                                    <small class="fw-semibold">849k</small>
-                                  </div>
-                                </div>
-                              </li>
-                              <li class="d-flex">
-                                <div class="avatar flex-shrink-0 me-3">
-                                  <span class="avatar-initial rounded bg-label-secondary"
-                                    ><i class="bx bx-football"></i
-                                  ></span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                  <div class="me-2">
-                                    <h6 class="mb-0">Sports</h6>
-                                    <small class="text-muted">Football, Cricket Kit</small>
-                                  </div>
-                                  <div class="user-progress">
-                                    <small class="fw-semibold">99</small>
-                                  </div>
-                                </div>
-                              </li>
-                            </ul>
+                                </li>
+                                <?php
+                                }
+                                ?>
+                              </ul>
+                            </div>
                           </div>
                         </div>
                       </div>  

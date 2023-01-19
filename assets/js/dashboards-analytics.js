@@ -420,6 +420,19 @@
 
   // Order Statistics Chart
   // --------------------------------------------------------------------
+  const orderStatistics = document.getElementsByName('order_statistics')[0].value
+  
+  let names = []
+  let percentage = []
+  console.table(orderStatistics)
+  JSON.parse(orderStatistics).forEach(order => {
+    
+    names.push(order[0])
+    percentage.push(order[3])
+  });
+  console.log(names)
+  console.log(percentage)
+  
   const chartOrderStatistics = document.querySelector('#orderStatisticsChart'),
     orderChartConfig = {
       chart: {
@@ -473,7 +486,7 @@
                 show: true,
                 fontSize: '0.8125rem',
                 color: axisColor,
-                label: 'Weekly',
+                label: 'Monthly',
                 formatter: function (w) {
                   return '38%';
                 }
