@@ -203,6 +203,54 @@ function getById($tablename, $id)
     return (mysqli_query($conn, $view_query));
 }
 
+function getEmpNameById($id)
+{
+    global $conn;
+    $view_query = "select name from employees where id = $id";
+    return (mysqli_query($conn, $view_query));
+}
+
+function getTotalOrders($id)
+{
+    global $conn;
+    $view_query = "select count(id) as count from sales_order where employee_id = $id";
+    return (mysqli_query($conn, $view_query));
+}
+
+function getTotalItemsSold($id)
+{
+    $items_sold=0;
+    $report = employee_report($id);
+    while($row = mysqli_fetch_assoc($report))
+    {
+        $items_sold=$items_sold+$row['units_sold'];
+    }
+    return $items_sold;
+}
+
+function calcCommission($id, $by="MONTH")
+{
+    global $conn;
+    $format = ($by == "MONTH") ? "MONTH" : "YEAR";
+    $view_query = "
+    SELECT 
+        products.price*SUM(order_items.quantity) as extended_price
+    FROM order_items
+    JOIN products ON order_items.product_id = products.id
+    JOIN sales_order ON sales_order.id = order_items.sales_order_id
+    JOIN employees on employees.id = sales_order.employee_id
+    WHERE $format(sales_order.order_date) = $format(CURDATE()) and employees.id = $id
+    GROUP BY order_items.product_id, sales_order.employee_id;
+    ";
+    $Comm=0;
+    $result=mysqli_query($conn, $view_query);
+    while($row = mysqli_fetch_assoc($result))
+    {
+        $Comm=$Comm+$row['extended_price'];
+    }
+    $Comm=$Comm*.01;
+    return $Comm;
+}
 function section_name($tablename1, $tablename2, $item_id, $id)
 {
     global $conn;

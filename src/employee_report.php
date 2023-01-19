@@ -28,7 +28,6 @@ include_once('includes/header.php');
             <!-- Content -->
             <div class="container-xxl flex-grow-1 container-p-y">
               <div class="row">
-            
                 <div class="card">
                     <div class="d-flex justify-content-between">
                       <h5 class="card-header">Report</h5>
@@ -89,44 +88,44 @@ include_once('includes/header.php');
                           }
                         }
                           ?>
-                          <tr>
-                            <td colspan="4">Total</td>
-                            <td colspan="1">242</td>
-                          </tr>
 
                         </tbody>
                       </table>
-                      <div class="d-flex justify-content-between">
-                          <h5 class="card-header">Overall Sales</h5>
-                        </div>
-                        <div class="mb-3 col-md-12">
-                          <label for="Name" class="form-label">Name</label>
-                          <div>2425</div>
-                        </div>
-                        <div class="mb-3 col-md-6">
-                          <label for="email" class="form-label">E-mail</label>
-                          <div>242</div>
-                        </div>
                     </div>
                   </div>
-<<<<<<< HEAD
-          
-                <div class="card mt-3">
-                  
-=======
-                  <?php if(mysqli_num_rows($report )> 0): ?>
-                  <?php
-                  // mysqli_fetch_assoc($report);
-                  ?>
-                  <div class="card mt-3 px-3 py-2 d-flex" style="font-size: 13px;">
-                    <div class="col-sm-2 col-form-label"><strong>Monthly Sales:</strong> <?= 'XYZ' ?></div>
-                    <div class="col-sm-2 col-form-label"><strong>Annual Sales:</strong> <?= 'XYZ' ?></div>
-                    <div class="col-sm-2 col-form-label"><strong>Total orders:</strong> <?= 'XYZ' ?></div>
-                    <div class="col-sm-2 col-form-label"><strong>Total items sold:</strong> <?= 'XYZ' ?></div>
-                    <div class="col-sm-2 col-form-label"><strong>Commision:</strong> <?= 'XYZ' ?></div>
+                                  <?php if(mysqli_num_rows($report )> 0): ?>
+                <?php
+                $items_sold=getTotalItemsSold($user_id);
+                $commision=calcCommission($user_id);
+
+                $orders=getTotalOrders($user_id);
+                $total_orders=mysqli_fetch_assoc($orders)['count'];
+                ?>
+                <div class="card mt-3 px-3 py-2 col-12" style="font-size: 13px;">
+                  <div class="card-body d-flex">
+                    <div class="border-end px-5">
+                      <h5 class="fw-bold mt-3">Monthly Sales </h5>
+                      <h4><?= 'XYZ' ?></h4>
+                    </div>
+                    <div class="border-end px-5">
+                      <h5 class="fw-bold mt-3">Annual Sales </h5>
+                      <h4><?= 'XYZ' ?></h4>
+                    </div>
+                    <div class="border-end px-5">
+                      <h5 class="fw-bold mt-3">Total orders </h5>
+                      <h4><?= $total_orders; ?></h4>
+                    </div>
+                    <div class="border-end px-5">
+                      <h5 class="fw-bold mt-3">Total items sold </h5>
+                      <h4><?= $items_sold; ?></h4>
+                    </div>
+                    <div class="px-5">
+                      <h5 class="fw-bold mt-3">Commission </h5>
+                      <h4>$<?= $commision ?></h4>
+                    </div>
                   </div>
+                </div>                                                
                 <?php endif; ?>
->>>>>>> ebf3c7f4978fd9f8b8e35991cc1464b5931cde7b
                 </div>
               </div>
 
