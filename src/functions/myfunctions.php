@@ -162,6 +162,10 @@ function getAll($tablename)
     return mysqli_query($conn, $view_query);
 }
 
+// function getEmpName() {
+
+// }
+
 function getBySection($tablename, $section_name)
 {
     global $conn;
@@ -187,6 +191,13 @@ function getById($tablename, $id)
 {
     global $conn;
     $view_query = "select * from $tablename where id = $id";
+    return (mysqli_query($conn, $view_query));
+}
+
+function getEmpNameById($id)
+{
+    global $conn;
+    $view_query = "select name from employees where id = $id";
     return (mysqli_query($conn, $view_query));
 }
 

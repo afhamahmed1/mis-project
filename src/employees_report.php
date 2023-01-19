@@ -96,7 +96,7 @@ include_once('includes/header.php');
     <!-- employees_table.children[i].children[0].children[1].innerHTML -->
 
 <script>
-    const employees_table = document.getElementsByClassName('employee_report_table')[0]
+    const employees_table = document.getElementsByClassName('employee_report_table')[0];
     // console.log(employees_table.children)
     for(let i=0; i<employees_table.childElementCount; i++){
         const rows = employees_table.children[i]

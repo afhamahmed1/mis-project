@@ -32,11 +32,18 @@ include_once('includes/header.php');
                 <div class="card">
                     <div class="d-flex justify-content-between">
                       <h5 class="card-header">Report</h5>
-                      <div class="my-3 me-4">
+                      <div class="mt-3 me-4">
+                        <?php
+
+                        ?>
                         <a href="pdf_maker.php?EMP_ID=<?= $_GET['id']; ?>&ACTION=VIEW">
                           <button class="btn btn-primary d-grid w-100 export_btn" type="submit">Export</button>
                         </a>
                       </div>
+                    </div>
+                    <div class="mx-4">
+                      <?php $name=mysqli_fetch_assoc(getById('employees',$_GET['id'])); ?>
+                      <h6><strong>Employee Name:</strong> <?= $name['name'] ?></h6>
                     </div>
                     <div class="table-responsive text-nowrap">
                       <table class="table table-hover">
@@ -71,8 +78,9 @@ include_once('includes/header.php');
                               <td>$<?= $row['extended_price'] ?></td>
                             </tr>
                             <?php
-                            }
-                          }else{
+                            } ?>
+                            <?php
+                          } else{
                             ?>
                             <tr>
                               <td class ="text-center" colspan="5" style="height: 300px;" >No Data Found</td>
@@ -101,9 +109,24 @@ include_once('includes/header.php');
                         </div>
                     </div>
                   </div>
+<<<<<<< HEAD
           
                 <div class="card mt-3">
                   
+=======
+                  <?php if(mysqli_num_rows($report )> 0): ?>
+                  <?php
+                  // mysqli_fetch_assoc($report);
+                  ?>
+                  <div class="card mt-3 px-3 py-2 d-flex" style="font-size: 13px;">
+                    <div class="col-sm-2 col-form-label"><strong>Monthly Sales:</strong> <?= 'XYZ' ?></div>
+                    <div class="col-sm-2 col-form-label"><strong>Annual Sales:</strong> <?= 'XYZ' ?></div>
+                    <div class="col-sm-2 col-form-label"><strong>Total orders:</strong> <?= 'XYZ' ?></div>
+                    <div class="col-sm-2 col-form-label"><strong>Total items sold:</strong> <?= 'XYZ' ?></div>
+                    <div class="col-sm-2 col-form-label"><strong>Commision:</strong> <?= 'XYZ' ?></div>
+                  </div>
+                <?php endif; ?>
+>>>>>>> ebf3c7f4978fd9f8b8e35991cc1464b5931cde7b
                 </div>
               </div>
 
