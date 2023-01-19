@@ -62,7 +62,7 @@
       },
       stroke: {
         curve: 'smooth',
-        width: 6,
+        width: 3,
         lineCap: 'round',
         colors: [cardColor]
       },
@@ -93,7 +93,7 @@
         }
       },
       xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         labels: {
           style: {
             fontSize: '13px',
@@ -465,7 +465,7 @@
     }
   },
   legend: {
-    show: true
+    show: false
   },
   plotOptions: {
     pie: {
