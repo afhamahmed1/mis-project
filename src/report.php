@@ -87,15 +87,47 @@ include_once('includes/header.php');
                   </div>
                   <?php if(mysqli_num_rows($report )> 0): ?>
                   <?php
-                  // mysqli_fetch_assoc($report);
+                  $monthly_sales=monthly_sales($user_id);
+
+                  $orders=getTotalOrders($user_id);
+                  $total_orders=mysqli_fetch_assoc($orders)['count'];
+                  
+                  $items_sold=getTotalItemsSold($user_id);
+
+                  $commision=calcCommission($user_id);
                   ?>
-                  <div class="card mt-3 px-3 py-2 d-flex" style="font-size: 13px;">
-                    <div class="col-sm-2 col-form-label"><strong>Monthly Sales:</strong> <?= 'XYZ' ?></div>
-                    <div class="col-sm-2 col-form-label"><strong>Annual Sales:</strong> <?= 'XYZ' ?></div>
-                    <div class="col-sm-2 col-form-label"><strong>Total orders:</strong> <?= 'XYZ' ?></div>
-                    <div class="col-sm-2 col-form-label"><strong>Total items sold:</strong> <?= 'XYZ' ?></div>
-                    <div class="col-sm-2 col-form-label"><strong>Commision:</strong> <?= 'XYZ' ?></div>
-                  </div>
+                  <div class="card mt-3 px-3 py-2 col-12" style="font-size: 13px;">
+                    <div class="card-body d-flex">
+                      <div class="flex-shrink-0">
+                        <img
+                          src="../assets/img/icons/unicons/sum.png"
+                          alt="chart success"
+                          class="rounded"
+                          style="width: 6rem;"
+                        />
+                      </div>
+                      <div class="border-end px-5">
+                        <h5 class="mt-3">Monthly Sales </h5>
+                        <h4>$<?= $monthly_sales ?></h4>
+                      </div>
+                      <div class="border-end px-5">
+                        <h5 class="mt-3">Annual Sales </h5>
+                        <h4><?= 'XYZ' ?></h4>
+                      </div>
+                      <div class="border-end px-5">
+                        <h5 class="mt-3">Total orders </h5>
+                        <h4><?= $total_orders; ?></h4>
+                      </div>
+                      <div class="border-end px-5">
+                        <h5 class="mt-3">Total items sold </h5>
+                        <h4><?= $items_sold; ?></h4>
+                      </div>
+                      <div class="px-5">
+                        <h5 class="mt-3">Commission </h5>
+                        <h4>$<?= $commision ?></h4>
+                      </div>
+                    </div>
+                  </div>                                                
                   <?php endif; ?>
                 </div>
               </div>
