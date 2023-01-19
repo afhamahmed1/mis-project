@@ -81,13 +81,32 @@ include_once('includes/header.php');
                           }
                         }
                           ?>
+                          <tr>
+                            <td colspan="4">Total</td>
+                            <td colspan="1">242</td>
+                          </tr>
 
                         </tbody>
                       </table>
+                      <div class="d-flex justify-content-between">
+                          <h5 class="card-header">Overall Sales</h5>
+                        </div>
+                        <div class="mb-3 col-md-12">
+                          <label for="Name" class="form-label">Name</label>
+                          <div>2425</div>
+                        </div>
+                        <div class="mb-3 col-md-6">
+                          <label for="email" class="form-label">E-mail</label>
+                          <div>242</div>
+                        </div>
                     </div>
                   </div>
+          
+                <div class="card mt-3">
+                  
                 </div>
               </div>
+
             <!-- / Content -->
 
             <!-- Footer -->

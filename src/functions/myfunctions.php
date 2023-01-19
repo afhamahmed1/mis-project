@@ -14,19 +14,35 @@ function get_inventory(){
     return mysqli_query($conn, $view_query);
 }
 
+
 function revenue_on_month_bases($year){
     global $conn;
     $view_query = "
-    SELECT 
-        DATE_FORMAT(order_date, '%Y-%m') AS month,
-        COUNT(*) AS number_of_orders
+    SELECT DATE_FORMAT(sales_order.created_at, '%m') AS month,DATE_FORMAT(sales_order.created_at, '%Y') as year, SUM(order_items.quantity * products.price) AS sales
     FROM sales_order
-    WHERE YEAR(order_date) = '$year'
-    GROUP BY DATE_FORMAT(order_date, '%Y-%m')
-    ORDER BY order_date ASC;
-    ";
+    JOIN order_items ON sales_order.id = order_items.sales_order_id
+    JOIN products on products.id = order_items.product_id
+    where YEAR(sales_order.created_at) = $year
+    GROUP BY month
+    ORDER BY month    ";
     return mysqli_query($conn, $view_query);
 }
+
+
+
+// function revenue_on_month_bases($year){
+//     global $conn;
+//     $view_query = "
+//     SELECT 
+//         DATE_FORMAT(order_date, '%Y-%m') AS month,
+//         COUNT(*) AS number_of_orders
+//     FROM sales_order
+//     WHERE YEAR(order_date) = '$year'
+//     GROUP BY DATE_FORMAT(order_date, '%Y-%m')
+//     ORDER BY order_date ASC;
+//     ";
+//     return mysqli_query($conn, $view_query);
+// }
 
 
 function order_statistics(){
@@ -38,19 +54,23 @@ function order_statistics(){
     (SUM(order_items.quantity) / 
         (SELECT SUM(quantity) FROM order_items 
         JOIN sales_order ON sales_order.id = order_items.sales_order_id
-        WHERE WEEK(sales_order.order_date,1) = WEEKOFYEAR(CURDATE()) 
+        WHERE WEEK(sales_order.order_date) = WEEK(CURDATE()) 
         AND YEAR(sales_order.order_date) = YEAR(CURDATE())) * 100) AS percentage,
     employees.name AS employee
     FROM order_items
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     JOIN employees ON sales_order.employee_id = employees.id
-    WHERE WEEK(sales_order.order_date,1) = WEEKOFYEAR(CURDATE()) AND YEAR(sales_order.order_date) = YEAR(CURDATE())
-    GROUP BY order_items.product_id;
-
+    WHERE WEEK(sales_order.order_date) = WEEK(CURDATE()) AND YEAR(sales_order.order_date) = YEAR(CURDATE())
+    GROUP BY order_items.product_id, employees.id
+    ORDER BY percentage DESC
     ";
     return mysqli_query($conn, $view_query);
 }
+
+
+
+
 
 function order_statistics_of_employee($id){
     global $conn;
@@ -61,16 +81,16 @@ function order_statistics_of_employee($id){
     (SUM(order_items.quantity) / 
         (SELECT SUM(quantity) FROM order_items 
         JOIN sales_order ON sales_order.id = order_items.sales_order_id
-        WHERE WEEK(sales_order.order_date,1) = WEEKOFYEAR(CURDATE()) and employees.id = $id
-        AND WEEK(sales_order.order_date) = WEEK(CURDATE())) * 100) AS percentage,
+        WHERE WEEK(sales_order.order_date) = WEEK(CURDATE()) and employees.id = $id
+        AND YEAR(sales_order.order_date) = YEAR(CURDATE())) * 100) AS percentage,
     employees.name AS employee
     FROM order_items
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     JOIN employees ON sales_order.employee_id = employees.id
-    WHERE WEEK(sales_order.order_date,1) = WEEKOFYEAR(CURDATE()) AND WEEK(sales_order.order_date) = WEEK(CURDATE())  and employees.id = $id
-    GROUP BY order_items.product_id;
-
+    WHERE WEEK(sales_order.order_date) = WEEK(CURDATE()) AND YEAR(sales_order.order_date) = YEAR(CURDATE()) and employees.id = $id
+    GROUP BY order_items.product_id, employees.id
+    ORDER BY percentage DESC
     ";
     return mysqli_query($conn, $view_query);
 }

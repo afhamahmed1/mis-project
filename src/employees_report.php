@@ -43,7 +43,7 @@ include_once('includes/header.php');
                             <th>Name</th>
                             <th>Sales</th>
                             <th>Monthly Objective</th>
-                           
+                            <th>Commission</th>
                           </tr>
                         </thead>
                         <tbody class="table-border-bottom-0 employee_report_table">
@@ -60,6 +60,7 @@ include_once('includes/header.php');
                             <td><?= $row['name'] ?></td>
                             <td><?= $row['monthly_sales'] ?></td>
                             <td><?= $row['monthly_target'] ?></td>
+                            <td><?= $row['monthly_sales']*(10/100) ?></td>
                             
                           </tr>
                           <?php 
@@ -71,6 +72,7 @@ include_once('includes/header.php');
                     </div>
                   </div>
                 </div>
+                
               </div>
             <!-- / Content -->
 
