@@ -18,13 +18,13 @@ function get_inventory(){
 function revenue_on_month_bases($year){
     global $conn;
     $view_query = "
-    SELECT DATE_FORMAT(sales_order.created_at, '%m') AS month,DATE_FORMAT(sales_order.created_at, '%Y') as year, SUM(order_items.quantity * products.price) AS sales
+    SELECT 
+        DATE_FORMAT(order_date, '%m') AS month, DATE_FORMAT(order_date, '%Y') AS year,
+        COUNT(*) AS number_of_orders
     FROM sales_order
-    JOIN order_items ON sales_order.id = order_items.sales_order_id
-    JOIN products on products.id = order_items.product_id
-    where YEAR(sales_order.created_at) = $year
-    GROUP BY month
-    ORDER BY month    ";
+    WHERE YEAR(order_date) = $year
+    GROUP BY DATE_FORMAT(order_date, '%Y-%m')
+    ORDER BY order_date ASC;";
     return mysqli_query($conn, $view_query);
 }
 
@@ -43,14 +43,14 @@ function weeklySalesAndOrder(){
 
 // function revenue_on_month_bases($year){
 //     global $conn;
-//     $view_query = "
-//     SELECT 
-//         DATE_FORMAT(order_date, '%Y-%m') AS month,
-//         COUNT(*) AS number_of_orders
-//     FROM sales_order
-//     WHERE YEAR(order_date) = '$year'
-//     GROUP BY DATE_FORMAT(order_date, '%Y-%m')
-//     ORDER BY order_date ASC;
+    // $view_query = "
+    // SELECT 
+    //     DATE_FORMAT(order_date, '%Y-%m') AS month,
+    //     COUNT(*) AS number_of_orders
+    // FROM sales_order
+    // WHERE YEAR(order_date) = '$year'
+    // GROUP BY DATE_FORMAT(order_date, '%Y-%m')
+    // ORDER BY order_date ASC;
 //     ";
 //     return mysqli_query($conn, $view_query);
 // }

@@ -79,6 +79,13 @@ include_once('includes/header.php');
                     <div class="row row-bordered g-0">
                       <div class="col-md-8">
                         <h5 class="card-header m-0 me-2 pb-3">Total Revenue</h5>
+                        <?php 
+                        $revenue_of_2021 = mysqli_fetch_all(revenue_on_month_bases(2021));
+                        $revenue_of_2022 = mysqli_fetch_all(revenue_on_month_bases(2022));
+                        // print_r(json_encode( $revenue_of_2021));
+                        ?>
+                        <input type="hidden" name="revenue_of_2021" value='<?= json_encode($revenue_of_2021) ?>'>
+                        <input type="hidden" name="revenue_of_2022" value='<?= json_encode($revenue_of_2022) ?>'>
                         <div id="totalRevenueChart" class="px-2"></div>
                       </div>
                       <div class="col-md-4">

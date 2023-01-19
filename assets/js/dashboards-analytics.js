@@ -12,6 +12,21 @@
   axisColor = config.colors.axisColor;
   borderColor = config.colors.borderColor;
 
+  const revenue_2021 = document.getElementsByName('revenue_of_2021')[0].value
+  const revenue_2022 = document.getElementsByName('revenue_of_2022')[0].value
+  let lst2021 = [0,0,0,0,0,0,0,0,0,0,0,0]
+  let lst2022 = [0,0,0,0,0,0,0,0,0,0,0,0]
+  // console.log((revenue_2022))
+  JSON.parse(revenue_2021).forEach($month => {
+    lst2021[parseInt($month[0])-1] = parseInt($month[2])
+  })
+  JSON.parse(revenue_2022).forEach($month => {
+    lst2022[parseInt($month[0])-1] = - parseInt($month[2])
+  });
+  console.log(lst2021)
+  console.log(lst2022)
+  // revenue_2021.forEach($month)
+
   // Total Revenue Report Chart - Bar Chart
   // --------------------------------------------------------------------
   const totalRevenueChartEl = document.querySelector('#totalRevenueChart'),
@@ -19,11 +34,11 @@
       series: [
         {
           name: '2021',
-          data: [18, 7, 15, 29, 18, 12, 9]
+          data: lst2021
         },
         {
           name: '2020',
-          data: [-13, -18, -9, -14, -5, -17, -15]
+          data: lst2022
         }
       ],
       chart: {
