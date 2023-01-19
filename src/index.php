@@ -124,7 +124,7 @@ include_once('includes/header.php');
                     $order_and_sales = weeklySalesAndOrder();
                     $order_and_sales = mysqli_fetch_assoc($order_and_sales);
                     $order_statistics = order_statistics();
-
+                    $order_statisticschart = mysqli_fetch_all( order_statistics())
                     ?>
                     <div class="col-md-12 col-lg-12 col-xl-12 order-0 mb-4">
                         <div class="card">
@@ -141,7 +141,7 @@ include_once('includes/header.php');
                                 <h2 class="mb-2"><?= $order_and_sales['total_orders'] ?></h2>
                                 <span>Total Orders</span>
                               </div>
-                              <input type="hidden" name="order_statistics" value='<?= json_encode(mysqli_fetch_all($order_statistics)) ?>'>
+                              <input type="hidden" name="order_statistics" value='<?= json_encode($order_statisticschart) ?>'>
                               <div id="orderStatisticsChart" value=""></div>
                             </div>
                             <div style="height:130px; overflow:auto">

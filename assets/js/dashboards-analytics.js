@@ -424,82 +424,140 @@
   
   let names = []
   let percentage = []
-  console.table(orderStatistics)
+  let count =0
   JSON.parse(orderStatistics).forEach(order => {
-    
+    if(count == 4){
+      // return
+    }
     names.push(order[0])
-    percentage.push(order[3])
+    percentage.push(Math.round(order[3]))
+    count++
   });
-  console.log(names)
-  console.log(percentage)
-  
-  const chartOrderStatistics = document.querySelector('#orderStatisticsChart'),
-    orderChartConfig = {
-      chart: {
-        height: 165,
-        width: 130,
-        type: 'donut'
-      },
-      labels: ['Electronic', 'Sports', 'Decor', 'Fashion'],
-      series: [85, 15, 50, 50],
-      colors: [config.colors.primary, config.colors.secondary, config.colors.info, config.colors.success],
-      stroke: {
-        width: 5,
-        colors: cardColor
-      },
-      dataLabels: {
-        enabled: false,
-        formatter: function (val, opt) {
-          return parseInt(val) + '%';
-        }
-      },
-      legend: {
-        show: false
-      },
-      grid: {
-        padding: {
-          top: 0,
-          bottom: 0,
-          right: 15
-        }
-      },
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '75%',
-            labels: {
-              show: true,
-              value: {
-                fontSize: '1.5rem',
-                fontFamily: 'Public Sans',
-                color: headingColor,
-                offsetY: -15,
-                formatter: function (val) {
-                  return parseInt(val) + '%';
-                }
-              },
-              name: {
-                offsetY: 20,
-                fontFamily: 'Public Sans'
-              },
-              total: {
-                show: true,
-                fontSize: '0.8125rem',
-                color: axisColor,
-                label: 'Monthly',
-                formatter: function (w) {
-                  return '38%';
-                }
-              }
+  const chartOrderStatistics = document.querySelector('#orderStatisticsChart')
+  let options = {
+    series: percentage,
+    labels: names,
+    chart: {
+    type: 'donut',
+    height: 165,
+    width: 130,
+    
+  },
+  dataLabels: {
+    enabled: false,
+    formatter: function (val, opt) {
+      return parseInt(val) + '%';
+    }
+  },
+  legend: {
+    show: true
+  },
+  plotOptions: {
+    pie: {
+      donut: {
+        size: '75%',
+        labels: {
+          show: true,
+          value: {
+            fontSize: '1.5rem',
+            fontFamily: 'Public Sans',
+            color: headingColor,
+            offsetY: -15,
+            formatter: function (val) {
+              return parseInt(val) + '%';
             }
-          }
+          },
+          name: {
+            offsetY: 20,
+            fontFamily: 'Public Sans'
+          },
+          
         }
       }
-    };
-  if (typeof chartOrderStatistics !== undefined && chartOrderStatistics !== null) {
-    const statisticsChart = new ApexCharts(chartOrderStatistics, orderChartConfig);
-    statisticsChart.render();
-  }
+    }
+  },
+
+  responsive: [{
+    breakpoint: 480,
+    options: {
+      chart: {
+        width: 200
+      },
+      legend: {
+        position: 'bottom'
+      }
+    }
+  }]
+  };
+  var chart = new ApexCharts(document.querySelector("#orderStatisticsChart"), options);
+  chart.render();
+
+  //   orderChartConfig = {
+  //     chart: {
+  //       height: 165,
+  //       width: 130,
+  //       type: 'donut'
+  //     },
+  //     labels: names,
+  //     series: percentage,
+  //     colors: [config.colors.primary, config.colors.secondary, config.colors.info, config.colors.success],
+  //     stroke: {
+  //       width: 5,
+  //       colors: cardColor
+  //     },
+  //     dataLabels: {
+  //       enabled: false,
+  //       formatter: function (val, opt) {
+  //         return parseInt(val) + '%';
+  //       }
+  //     },
+  //     legend: {
+  //       show: false
+  //     },
+  //     grid: {
+  //       padding: {
+  //         top: 0,
+  //         bottom: 0,
+  //         right: 15
+  //       }
+  //     },
+  //     plotOptions: {
+  //       pie: {
+  //         donut: {
+  //           size: '75%',
+  //           labels: {
+  //             show: true,
+  //             value: {
+  //               fontSize: '1.5rem',
+  //               fontFamily: 'Public Sans',
+  //               color: headingColor,
+  //               offsetY: -15,
+  //               formatter: function (val) {
+  //                 return parseInt(val) + '%';
+  //               }
+  //             },
+  //             name: {
+  //               offsetY: 20,
+  //               fontFamily: 'Public Sans'
+  //             },
+  //             total: {
+  //               show: true,
+  //               fontSize: '0.8125rem',
+  //               color: axisColor,
+  //               label: 'Monthly',
+  //               formatter: function (w) {
+  //                 return '38%';
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   };
+  // if (typeof chartOrderStatistics !== undefined && chartOrderStatistics !== null) {
+  //   const statisticsChart = new ApexCharts(chartOrderStatistics, orderChartConfig);
+  //   statisticsChart.render();
+  // }
 
   // Income Chart - Area chart
   // --------------------------------------------------------------------
