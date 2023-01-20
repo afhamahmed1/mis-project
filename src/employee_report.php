@@ -42,7 +42,7 @@ include_once('includes/header.php');
                     </div>
                     <div class="mx-4">
                       <?php $name=mysqli_fetch_assoc(getById('employees',$_GET['id'])); ?>
-                      <h6><strong>Employee Name:</strong> <?= $name['name'] ?></h6>
+                      <h6><strong>Sales Person Name:</strong> <?= $name['name'] ?></h6>
                     </div>
                     <div class="table-responsive text-nowrap">
                       <table class="table table-hover">

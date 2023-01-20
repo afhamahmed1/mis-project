@@ -11,7 +11,7 @@
         if( $_SESSION['role_as'] == '1') {
         ?>
         
-          <a class="nav-link" aria-current="page" href="employees_report.php">Employees Report</a>
+          <a class="nav-link" aria-current="page" href="employees_report.php">Sales Persons Report</a>
         
         
         <?php    
@@ -35,7 +35,7 @@
                 
                 <div class="flex-grow-1 d-flex justify-content-between">
                   <span class="fw-semibold d-block"> <i class="bx bx-user me-2"></i> <?= $_SESSION['auth_user']['name'] ?></span>
-                  <div class="text-muted "><em><small><?= ($_SESSION['role_as'] == 1) ? 'Manager':'Employee'; ?> </small> </em></div>
+                  <div class="text-muted "><em><small><?= ($_SESSION['role_as'] == 1) ? 'Manager':'Sales Person'; ?> </small> </em></div>
                 </div>
               </div>
             </a>

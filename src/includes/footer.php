@@ -23,7 +23,7 @@
         document.write(new Date().getFullYear());
         </script>
         , made by
-        Afham Ahmed, Yahya Naqvi, Maria Amjad, Leena Khan
+        Afham Ahmed, Yahya Naqvi, Raid Usmani, Maria Amjad, Leena Khan
     </div>
     
     </div>

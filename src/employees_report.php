@@ -32,14 +32,14 @@ include_once('includes/header.php');
             
                 <div class="card">
                     <div class="d-flex justify-content-between">
-                      <h5 class="card-header">Employees Report</h5>
+                      <h5 class="card-header">Sales Persons Report</h5>
                       
                     </div>
                     <div class="table-responsive text-nowrap">
                       <table class="table table-hover">
                         <thead>
                           <tr>
-                            <th>Employees ID</th>
+                            <th>Sales Person's ID</th>
                             <th>Name</th>
                             <th>Sales</th>
                             <th>Monthly Objective</th>

@@ -44,7 +44,7 @@ if ($count>0)
 	<tr><td colspan="5" align="center"><b>CONTACT: +92 335 XXXXXXX</b></td></tr>
 	<tr><td colspan="5" align="center"><b>WEBSITE: www.DBN-electronics.com</b></td></tr>
 	<tr><td colspan="5">&nbsp;</td></tr>
-	<tr><td colspan="5" align="center" style="font-size:14px;text-decoration:underline;"><b>EMPLOYEE REPORT</b></td></tr>
+	<tr><td colspan="5" align="center" style="font-size:14px;text-decoration:underline;"><b>Sales Person\'s REPORT</b></td></tr>
 	<br></br>
 	<tr>
 		<td colspan="5" align="center">
