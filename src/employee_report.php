@@ -35,7 +35,8 @@ include_once('includes/header.php');
                         <?php
 
                         ?>
-                        <a href="pdf_maker.php?EMP_ID=<?= $_GET['id']; ?>&ACTION=VIEW">
+                        <a href="pdf_maker.php?EMP_ID=<?= $_GET['id']; ?>
+                        &USER_NAME=<?= $_SESSION['auth_user']['name'] ?>&ACTION=VIEW">
                           <button class="btn btn-primary d-grid w-100 export_btn" type="submit">Export</button>
                         </a>
                       </div>
@@ -97,8 +98,9 @@ include_once('includes/header.php');
                   <?php
                   $monthly_sales=monthly_sales($user_id);
 
-                  $orders=getTotalOrders($user_id);
-                  $total_orders=mysqli_fetch_assoc($orders)['count'];
+                  $annual_sales=annual_sales($user_id);
+
+                  $total_orders=getTotalOrders($user_id);
                   
                   $items_sold=getTotalItemsSold($user_id);
 
@@ -115,12 +117,12 @@ include_once('includes/header.php');
                         />
                       </div>
                       <div class="border-end px-5">
-                        <h5 class="mt-3">Monthly Sales </h5>
-                        <h4>$<?= $monthly_sales ?></h4>
+                        <h5 class="mt-3">Sales Per Month</h5>
+                        <h4>$<?= $monthly_sales; ?></h4>
                       </div>
                       <div class="border-end px-5">
-                        <h5 class="mt-3">Annual Sales </h5>
-                        <h4><?= 'XYZ' ?></h4>
+                        <h5 class="mt-3">Sales Per Annum</h5>
+                        <h4>$<?= $annual_sales; ?></h4>
                       </div>
                       <div class="border-end px-5">
                         <h5 class="mt-3">Total orders </h5>

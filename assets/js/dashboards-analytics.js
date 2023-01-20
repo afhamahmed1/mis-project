@@ -23,8 +23,6 @@
   JSON.parse(revenue_2022).forEach($month => {
     lst2022[parseInt($month[0])-1] = - parseInt($month[2])
   });
-  console.log(lst2021)
-  console.log(lst2022)
   // revenue_2021.forEach($month)
 
   // Total Revenue Report Chart - Bar Chart
@@ -37,7 +35,7 @@
           data: lst2021
         },
         {
-          name: '2020',
+          name: '2022',
           data: lst2022
         }
       ],
@@ -441,9 +439,7 @@
   let percentage = []
   let count =0
   JSON.parse(orderStatistics).forEach(order => {
-    if(count == 4){
-      // return
-    }
+
     names.push(order[0])
     percentage.push(Math.round(order[3]))
     count++

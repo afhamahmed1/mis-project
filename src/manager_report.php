@@ -33,7 +33,9 @@ include_once('includes/header.php');
                     <div class="d-flex justify-content-between">
                       <h5 class="card-header">Report</h5>
                       <div class="my-3 me-4">
-                        <button class="btn btn-primary d-grid w-100" type="submit">Export</button>
+                        <a href="pdf_maker.php?USER_NAME=<?= $_SESSION['auth_user']['name']; ?>&ACTION=VIEW">
+                          <button class="btn btn-primary d-grid w-100" type="submit">Export</button>
+                        </a>
                       </div>
                     </div>
                     <div class="table-responsive text-nowrap">
@@ -78,6 +80,45 @@ include_once('includes/header.php');
                       </table>
                     </div>
                   </div>
+                  <?php if(mysqli_num_rows($report )> 0): ?>
+                  <?php
+                  $monthly_sales=monthly_sales();
+
+                  $annual_sales=annual_sales();
+
+                  $total_orders=getTotalOrders();
+                  
+                  $items_sold=getTotalItemsSold();
+                  ?>
+                  <div class="card mt-3 px-3 py-2 col-12" style="font-size: 13px;">
+                    <div class="card-body d-flex">
+                      <div class="flex-shrink-0">
+                        <img
+                          src="../assets/img/icons/unicons/sum.png"
+                          alt="chart success"
+                          class="rounded"
+                          style="width: 6rem;"
+                        />
+                      </div>
+                      <div class="border-end px-5">
+                        <h5 class="mt-3">Sales Per Month</h5>
+                        <h4>$<?= $monthly_sales; ?></h4>
+                      </div>
+                      <div class="border-end px-5">
+                        <h5 class="mt-3">Sales Per Annum</h5>
+                        <h4>$<?= $annual_sales; ?></h4>
+                      </div>
+                      <div class="border-end px-5">
+                        <h5 class="mt-3">Total orders </h5>
+                        <h4><?= $total_orders; ?></h4>
+                      </div>
+                      <div class="px-5">
+                        <h5 class="mt-3">Total items sold </h5>
+                        <h4><?= $items_sold; ?></h4>
+                      </div>
+                    </div>
+                  </div>                                                
+                  <?php endif; ?>
                 </div>
               </div>
             <!-- / Content -->

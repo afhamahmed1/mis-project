@@ -33,14 +33,15 @@ include_once('includes/header.php');
                     <div class="d-flex justify-content-between">
                       <h5 class="card-header">Report</h5>
                       <div class="my-3 me-4">
-                        <a href="pdf_maker.php?EMP_ID=<?= $_SESSION['auth_user']['userid']; ?>&ACTION=VIEW">
+                        <a href="pdf_maker.php?EMP_ID=<?= $_SESSION['auth_user']['userid']; ?>
+                        &USER_NAME=<?= $_SESSION['auth_user']['name'] ?>&ACTION=VIEW">
                           <button class="btn btn-primary d-grid w-100 export_btn" type="submit">Export</button>
                         </a>
                       </div>
                     </div>
                     <div class="mx-4">
                       <?php $name=mysqli_fetch_assoc(getEmpNameById($_SESSION['auth_user']['userid'])); ?>
-                      <h6><strong>Employee Name:</strong> <?= $name['name'] ?></h6>
+                      <h6><strong>Sales Person Name:</strong> <?= $name['name'] ?></h6>
                     </div>
                     <div class="table-responsive text-nowrap">
                       <table class="table table-hover">
@@ -89,8 +90,9 @@ include_once('includes/header.php');
                   <?php
                   $monthly_sales=monthly_sales($user_id);
 
-                  $orders=getTotalOrders($user_id);
-                  $total_orders=mysqli_fetch_assoc($orders)['count'];
+                  $annual_sales=annual_sales($user_id);
+
+                  $total_orders=getTotalOrders($user_id);
                   
                   $items_sold=getTotalItemsSold($user_id);
 
@@ -107,12 +109,12 @@ include_once('includes/header.php');
                         />
                       </div>
                       <div class="border-end px-5">
-                        <h5 class="mt-3">Monthly Sales </h5>
-                        <h4>$<?= $monthly_sales ?></h4>
+                        <h5 class="mt-3">Sales Per Month</h5>
+                        <h4>$<?= $monthly_sales; ?></h4>
                       </div>
                       <div class="border-end px-5">
-                        <h5 class="mt-3">Annual Sales </h5>
-                        <h4><?= 'XYZ' ?></h4>
+                        <h5 class="mt-3">Sales Per Annum</h5>
+                        <h4>$<?= $annual_sales; ?></h4>
                       </div>
                       <div class="border-end px-5">
                         <h5 class="mt-3">Total orders </h5>

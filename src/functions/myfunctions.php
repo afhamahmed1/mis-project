@@ -81,21 +81,56 @@ function order_statistics(){
     return mysqli_query($conn, $view_query);
 }
 
-function getProfit($month=0)
+function getSales($month=0)
 {
     global $conn;
+    $year=0;
+    if ($month=='prev')
+    {
+        $month='INTERVAL 1 MONTH';
+        if (date('m')==1)
+        {
+            $year='INTERVAL 1 MONTH';
+        }
+    }
     $view_query="
     SELECT 
-        SUM(products.price*order_items.quantity) as extended_price
+        SUM(products.price*order_items.quantity) as monthly_sales
     FROM order_items
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
-    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE())-$month
-    AND YEAR(sales_order.order_date) = YEAR(CURDATE())-1;
+    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()- $month)
+    AND YEAR(sales_order.order_date) = YEAR(CURDATE()- $year);
     ";
+    $result=mysqli_query($conn, $view_query);
+    $sales=mysqli_fetch_assoc($result);
+    return $sales['monthly_sales'];
 }
 
-
+function getProfit($month=0) {
+    global $conn;
+    $year=0;
+    if ($month=='prev')
+    {
+        $month='INTERVAL 1 MONTH';
+        if (date('m')==1)
+        {
+            $year='INTERVAL 1 MONTH';
+        }
+    }
+    $view_query="
+    SELECT 
+        SUM((products.price-products.cost)*order_items.quantity) as profit
+    FROM order_items
+    JOIN products ON order_items.product_id = products.id
+    JOIN sales_order ON sales_order.id = order_items.sales_order_id
+    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()-$month)
+    AND YEAR(sales_order.order_date) = YEAR(CURDATE()-$year);
+    ";
+    $result=mysqli_query($conn, $view_query);
+    $profit=mysqli_fetch_assoc($result);
+    return $profit['profit'];
+}
 
 function order_statistics_of_employee($id){
     global $conn;
@@ -222,17 +257,24 @@ function getEmpNameById($id)
     return (mysqli_query($conn, $view_query));
 }
 
-function getTotalOrders($id)
+function getTotalOrders($id="")
 {
     global $conn;
-    $view_query = "select count(id) as count from sales_order where employee_id = $id";
-    return (mysqli_query($conn, $view_query));
+    $check_id="";
+    if ($id != "")
+    {
+        $check_id="where employee_id=$id";
+    }
+    $view_query = "select count(id) as count from sales_order $check_id";
+    $result=mysqli_query($conn, $view_query);
+    $orders=mysqli_fetch_assoc($result)['count'];
+    return $orders;
 }
 
-function getTotalItemsSold($id)
+function getTotalItemsSold($id="")
 {
     $items_sold=0;
-    $report = employee_report($id);
+    $report= $id=="" ? manager_report() : employee_report($id);
     while($row = mysqli_fetch_assoc($report))
     {
         $items_sold=$items_sold+$row['units_sold'];
@@ -251,16 +293,23 @@ function calcCommission($id, $by="MONTH")
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     JOIN employees on employees.id = sales_order.employee_id
-    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()) and employees.id = $id;
+    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE())
+    and YEAR(sales_order.order_date) = YEAR(CURDATE())
+    and employees.id = $id;
     ";
     $result=mysqli_query($conn, $view_query);
     $monthly_sales=mysqli_fetch_assoc($result)['monthly_sales'];
     $Comm=$monthly_sales*.01;
     return $Comm;
 }
-function monthly_sales($id)
+function monthly_sales($id="")
 {
     global $conn;
+    $check_id="";
+    if ($id != "")
+    {
+        $check_id="and employees.id=$id";
+    }
     $view_query="
     SELECT 
     products.price*SUM(order_items.quantity) as monthly_sales
@@ -268,28 +317,37 @@ function monthly_sales($id)
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     JOIN employees on employees.id = sales_order.employee_id
-    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()) and employees.id = $id;
+    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE())
+    and YEAR(sales_order.order_date) = YEAR(CURDATE())
+    $check_id;
     ";
     $result=mysqli_query($conn, $view_query);
     $sales=mysqli_fetch_assoc($result);
     return $sales['monthly_sales'];
 }
 
-function annual_sales($id)
+function annual_sales($id="")
 {
     global $conn;
+    $check_id="";
+    if ($id != "")
+    {
+        $check_id="and employees.id=$id";
+    }
+
     $view_query="
     SELECT 
-    products.price*SUM(order_items.quantity) as monthly_sales
+    products.price*SUM(order_items.quantity) as annual_sales
     FROM order_items
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     JOIN employees on employees.id = sales_order.employee_id
-    WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()) and employees.id = 10;
+    WHERE sales_order.order_date > CURDATE()- INTERVAL 12 MONTH
+    $check_id;
     ";
     $result=mysqli_query($conn, $view_query);
     $sales=mysqli_fetch_assoc($result);
-    return $sales['monthly_sales'];
+    return $sales['annual_sales'];
 }
 function section_name($tablename1, $tablename2, $item_id, $id)
 {

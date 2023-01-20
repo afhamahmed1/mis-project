@@ -4,7 +4,18 @@ require './functions/myfunctions.php';
 include_once('TCPDF/tcpdf.php');
 
 $user_id = $_GET['EMP_ID'];
-$report = employee_report($user_id);
+$user_name= $_GET['USER_NAME'];
+$user_details=getAll('employees');
+if (isset($user_id))
+{
+	$report= employee_report($user_id);
+	$report_title= 'EMPLOYEE REPORT';
+}
+else
+{
+	$report = manager_report();
+	$report_title= 'COMPANY REPORT';
+}
 $count=mysqli_num_rows($report);
 
 if ($count>0)
@@ -37,14 +48,31 @@ if ($count>0)
 	color:#000;
 	}
 	</style>    
-	<table cellpadding="0" cellspacing="0" style="border:1px solid #ddc;width:100%;">
+	<table cellpadding="0" cellspacing="0" style="border:1px solid #808080;width:100%;">
 	<table style="width:100%;" >
 	<tr><td colspan="5">&nbsp;</td></tr>
 	<tr><td colspan="5" align="center"><b>DADA BHAI NOORJEE ELECTRONICS</b></td></tr>
 	<tr><td colspan="5" align="center"><b>CONTACT: +92 335 XXXXXXX</b></td></tr>
 	<tr><td colspan="5" align="center"><b>WEBSITE: www.DBN-electronics.com</b></td></tr>
 	<tr><td colspan="5">&nbsp;</td></tr>
+<<<<<<< HEAD
 	<tr><td colspan="5" align="center" style="font-size:14px;text-decoration:underline;"><b>Sales Person\'s REPORT</b></td></tr>
+=======
+	<tr>
+		<td colspan="5" align="center" style="font-size:14px;text-decoration:underline;">
+			<b>'.$report_title.'</b>
+		</td>
+	</tr>
+	<tr><td>&nbsp;</td></tr>
+	<tr>
+		<td colspan="2"><b>EMPLOYEE NAME: '.$user_name.'</b></td>
+		<td align="right" colspan="3"><b>BILL DT.: '.date("d-m-Y").'</b></td>
+	</tr>
+	<tr>
+		<td colspan="3"><b>PHONE NUMBER: </b></td>
+		<td align="right" colspan="3"><b>BILL NO.: </b></td>
+	</tr>
+>>>>>>> 63c3881 (updated pdf and report pages)
 	<br></br>
 	<tr>
 		<td colspan="5" align="center">
@@ -106,8 +134,21 @@ if ($count>0)
 					-------------------------------------------------------------------------------------------------------------------------------
 				</td>
 			</tr>
-		<tr><td colspan="2">&nbsp;</td></tr>
-		<tr><td colspan="2">&nbsp;</td></tr>
+			<tr><td colspan="2">&nbsp;</td></tr>
+			<tr><td colspan="2">&nbsp;</td></tr>
+			<tr style="font-size:10px;">
+				<td></td><td></td><td></td><td></td>
+				<td style="text-align:right;color: #252525;">
+					Printed by: '.$user_name.' &nbsp;&nbsp;&nbsp;
+				</td>
+			</tr>
+			<tr style="font-size:10px;">
+				<td></td><td></td><td></td><td></td>
+				<td style="text-align:right;color: #252525;">
+					On: '.date("d-m-Y").' &nbsp;&nbsp;&nbsp;
+				</td>
+			</tr>
+			<tr><td colspan="2">&nbsp;</td></tr>
 		</table>
 	</table>'; 
 	$pdf->writeHTML($content);

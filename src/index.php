@@ -43,11 +43,16 @@ include_once('includes/header.php');
                                 class="rounded"
                               />
                             </div>
-                            
+                          <?php
+                          $profit=getProfit();
+                          $profit_inc=round((($profit-getProfit('prev'))/$profit)*100,2);
+                          ?>
                           </div>
                           <span class="fw-semibold d-block mb-1">Profit</span>
-                          <h3 class="card-title mb-2">$12,628</h3>
-                          <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +72.80%</small>
+                          <h3 class="card-title mb-2">$<?= $profit ?></h3>
+                          <small class="text-success fw-semibold">
+                            <i class="bx bx-up-arrow-alt"></i> +<?= $profit_inc ?>%
+                          </small>
                         </div>
                       </div>
                     </div>
@@ -64,9 +69,15 @@ include_once('includes/header.php');
                             </div>
                             
                           </div>
+                          <?php
+                          $sales=getSales();
+                          $sales_inc=round((($sales-getSales('prev'))/$sales)*100,2);
+                          ?>
                           <span>Sales</span>
-                          <h3 class="card-title text-nowrap mb-1">$4,679</h3>
-                          <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +28.42%</small>
+                          <h3 class="card-title text-nowrap mb-1">$<?= $sales ?></h3>
+                          <small class="text-success fw-semibold">
+                            <i class="bx bx-up-arrow-alt"></i> +<?= $sales_inc ?>%
+                          </small>
                         </div>
                       </div>
                     </div>
