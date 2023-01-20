@@ -9,7 +9,7 @@ $user_details=getAll('employees');
 if (isset($user_id))
 {
 	$report= employee_report($user_id);
-	$report_title= 'EMPLOYEE REPORT';
+	$report_title= 'SALESPERSON REPORT';
 }
 else
 {
@@ -55,9 +55,7 @@ if ($count>0)
 	<tr><td colspan="5" align="center"><b>CONTACT: +92 335 XXXXXXX</b></td></tr>
 	<tr><td colspan="5" align="center"><b>WEBSITE: www.DBN-electronics.com</b></td></tr>
 	<tr><td colspan="5">&nbsp;</td></tr>
-<<<<<<< HEAD
-	<tr><td colspan="5" align="center" style="font-size:14px;text-decoration:underline;"><b>Sales Person\'s REPORT</b></td></tr>
-=======
+
 	<tr>
 		<td colspan="5" align="center" style="font-size:14px;text-decoration:underline;">
 			<b>'.$report_title.'</b>
@@ -72,7 +70,6 @@ if ($count>0)
 		<td colspan="3"><b>PHONE NUMBER: </b></td>
 		<td align="right" colspan="3"><b>BILL NO.: </b></td>
 	</tr>
->>>>>>> 63c3881 (updated pdf and report pages)
 	<br></br>
 	<tr>
 		<td colspan="5" align="center">
