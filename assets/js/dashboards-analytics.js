@@ -18,10 +18,10 @@
   let lst2022 = [0,0,0,0,0,0,0,0,0,0,0,0]
   // console.log((revenue_2022))
   JSON.parse(revenue_2021).forEach($month => {
-    lst2021[parseInt($month[0])-1] = parseInt($month[2])
+    lst2021[parseInt($month[0])-1] = -parseInt($month[2])
   })
   JSON.parse(revenue_2022).forEach($month => {
-    lst2022[parseInt($month[0])-1] = - parseInt($month[2])
+    lst2022[parseInt($month[0])-1] = parseInt($month[2])
   });
   // revenue_2021.forEach($month)
 
@@ -31,12 +31,12 @@
     totalRevenueChartOptions = {
       series: [
         {
-          name: '2021',
-          data: lst2021
-        },
-        {
           name: '2022',
           data: lst2022
+        },
+        {
+          name: '2021',
+          data: lst2021
         }
       ],
       chart: {
@@ -289,9 +289,11 @@
 
   // Growth Chart - Radial Bar Chart
   // --------------------------------------------------------------------
+  const growth = document.getElementsByName('growth')[0]
+  console.log()
   const growthChartEl = document.querySelector('#growthChart'),
     growthChartOptions = {
-      series: [40],
+      series: [Math.round(JSON.parse(growth.value).growth)],
       labels: ['Growth'],
       chart: {
         height: 240,
@@ -444,6 +446,7 @@
     percentage.push(Math.round(order[3]))
     count++
   });
+  const MostSelling = Math.max(...percentage)
   const chartOrderStatistics = document.querySelector('#orderStatisticsChart')
   let options = {
     series: percentage,
@@ -482,7 +485,15 @@
             offsetY: 20,
             fontFamily: 'Public Sans'
           },
-          
+          total: {
+            show: true,
+            fontSize: '0.8125rem',
+            color: axisColor,
+            label: 'Highest',
+            formatter: function (w) {
+              return MostSelling+'%';
+            }
+          }
         }
       }
     }
@@ -551,15 +562,15 @@
   //               offsetY: 20,
   //               fontFamily: 'Public Sans'
   //             },
-  //             total: {
-  //               show: true,
-  //               fontSize: '0.8125rem',
-  //               color: axisColor,
-  //               label: 'Monthly',
-  //               formatter: function (w) {
-  //                 return '38%';
-  //               }
-  //             }
+              // total: {
+              //   show: true,
+              //   fontSize: '0.8125rem',
+              //   color: axisColor,
+              //   label: 'Monthly',
+              //   formatter: function (w) {
+              //     return '38%';
+              //   }
+              // }
   //           }
   //         }
   //       }

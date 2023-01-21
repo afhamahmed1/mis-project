@@ -99,14 +99,22 @@ include_once('includes/header.php');
                         <input type="hidden" name="revenue_of_2022" value='<?= json_encode($revenue_of_2022) ?>'>
                         <div id="totalRevenueChart" class="px-2"></div>
                       </div>
+                      <?php
+                      $current_year_sales = mysqli_fetch_assoc(total_sales_till_current_month());
+                      $previous_year_sales = mysqli_fetch_assoc(total_sales_till_current_month(-1));
+
+                      $growth = mysqli_fetch_assoc(growth());
+
+                      ?>
                       <div class="col-md-4">
                         <div class="card-body">
                           <div class="text-center">
                             
                           </div>
                         </div>
+                        <input type="hidden" name="growth" value='<?= json_encode($growth) ?>'>
                         <div id="growthChart"></div>
-                        <div class="text-center fw-semibold pt-3 mb-2">62% Company Growth</div>
+                        <div class="text-center fw-semibold pt-3 mb-2"><?= round( $growth['growth']) ?>% Company Growth</div>
 
                         <div class="d-flex px-xxl-4 px-lg-2 p-4 gap-xxl-3 gap-lg-1 gap-3 justify-content-between">
                           <div class="d-flex">
@@ -114,8 +122,8 @@ include_once('includes/header.php');
                               <span class="badge bg-label-primary p-2"><i class="bx bx-dollar text-primary"></i></span>
                             </div>
                             <div class="d-flex flex-column">
-                              <small>2022</small>
-                              <h6 class="mb-0">$32.5k</h6>
+                              <small><?= $current_year_sales['year'] ?></small>
+                              <h6 class="mb-0">$<?= $current_year_sales['total_sales'] ?></h6>
                             </div>
                           </div>
                           <div class="d-flex">
@@ -123,8 +131,8 @@ include_once('includes/header.php');
                               <span class="badge bg-label-info p-2"><i class="bx bx-wallet text-info"></i></span>
                             </div>
                             <div class="d-flex flex-column">
-                              <small>2021</small>
-                              <h6 class="mb-0">$41.2k</h6>
+                            <small><?= $previous_year_sales['year'] ?></small>
+                              <h6 class="mb-0">$<?= $previous_year_sales['total_sales'] ?></h6>
                             </div>
                           </div>
                         </div>
@@ -139,7 +147,7 @@ include_once('includes/header.php');
                     <!-- </div>
                     <div class="row"> -->
                     <?php
-                    $order_and_sales = weeklySalesAndOrder();
+                    $order_and_sales = monthlySalesAndOrder();
                     $order_and_sales = mysqli_fetch_assoc($order_and_sales);
                     $order_statistics = order_statistics();
                     $order_statisticschart = mysqli_fetch_all( order_statistics())

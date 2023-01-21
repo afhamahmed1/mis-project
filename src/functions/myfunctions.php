@@ -28,15 +28,16 @@ function revenue_on_month_bases($year){
     return mysqli_query($conn, $view_query);
 }
 
-function weeklySalesAndOrder(){
+function monthlySalesAndOrder(){
     global $conn;
     $view_query = 
     "
-    SELECT COUNT(sales_order.id) AS total_orders, SUM(products.price*order_items.quantity) AS total_sales
+    SELECT count(DISTINCT sales_order.id) AS total_orders, SUM(products.price*order_items.quantity) AS total_sales
     FROM sales_order
     JOIN order_items ON sales_order.id = order_items.sales_order_id
     JOIN products on products.id = order_items.product_id
     WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()) AND YEAR(sales_order.order_date) = YEAR(CURDATE())
+
     ";
     return mysqli_query($conn, $view_query);
 }
@@ -55,6 +56,38 @@ function weeklySalesAndOrder(){
 //     return mysqli_query($conn, $view_query);
 // }
 
+function total_sales_till_current_month($relative_to_curr_year = 0){
+    global $conn;
+    $view_query = 
+    "select sum(order_items.quantity*products.price) as total_sales, YEAR(sales_order.order_date) as year from sales_order
+    JOIN order_items on order_items.sales_order_id = sales_order.id
+    JOIN products on products.id = order_items.product_id
+    where YEAR(sales_order.order_date) = YEAR(CURRENT_DATE) + $relative_to_curr_year and MONTH(sales_order.order_date) BETWEEN 1 and MONTH(CURRENT_DATE)"
+    ;
+    return mysqli_query($conn, $view_query);
+    
+}
+
+function growth(){
+    global $conn;
+    $view_query = "
+    WITH prev_year_sales AS (
+        select sum(order_items.quantity*products.price) as total_sales, YEAR(sales_order.order_date) from sales_order
+        JOIN order_items on order_items.sales_order_id = sales_order.id
+        JOIN products on products.id = order_items.product_id
+        where YEAR(sales_order.order_date) = YEAR(CURRENT_DATE)-1 and MONTH(sales_order.order_date) BETWEEN 1 and MONTH(CURRENT_DATE)
+        ), current_year_sales AS (
+            select sum(order_items.quantity*products.price) as total_sales, YEAR(sales_order.order_date) from sales_order
+        JOIN order_items on order_items.sales_order_id = sales_order.id
+        JOIN products on products.id = order_items.product_id
+        where YEAR(sales_order.order_date) = YEAR(CURRENT_DATE) and MONTH(sales_order.order_date) BETWEEN 1 and MONTH(CURRENT_DATE)
+        )
+        SELECT (current_year_sales.total_sales - prev_year_sales.total_sales) / prev_year_sales.total_sales * 100 AS growth
+        FROM prev_year_sales, current_year_sales
+    ";
+    return mysqli_query($conn, $view_query);
+
+}
 
 function order_statistics(){
     global $conn;

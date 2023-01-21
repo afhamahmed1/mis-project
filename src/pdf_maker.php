@@ -1,20 +1,44 @@
-<?php                
+<?php
+session_start();       
 require './functions/config.php'; 
-require './functions/myfunctions.php'; 
+include_once('./functions/myfunctions.php'); 
 include_once('TCPDF/tcpdf.php');
 
 $user_id = $_GET['EMP_ID'];
 $user_name= $_GET['USER_NAME'];
 $user_details=getAll('employees');
+
 if (isset($user_id))
 {
+	include_once('middleware/employeeMiddleware.php');
 	$report= employee_report($user_id);
+	$employee_data = mysqli_fetch_assoc(getById('employees',$user_id));
 	$report_title= 'SALESPERSON REPORT';
+	$employee_name = '<td colspan="2"><b>EMPLOYEE NAME: '.$employee_data['name'].'</b></td>';
+	$monthly_sales=monthly_sales($user_id);
+
+	$annual_sales=annual_sales($user_id);
+
+	$total_orders=getTotalOrders($user_id);
+	
+	$items_sold=getTotalItemsSold($user_id);
+
+	$commision=calcCommission($user_id);
 }
 else
 {
+	include_once('middleware/adminMiddleware.php');
 	$report = manager_report();
 	$report_title= 'COMPANY REPORT';
+	$employee_name = '';
+	
+	$monthly_sales=monthly_sales();
+
+	$annual_sales=annual_sales();
+
+	$total_orders=getTotalOrders();
+	
+	$items_sold=getTotalItemsSold();
 }
 $count=mysqli_num_rows($report);
 
@@ -55,22 +79,65 @@ if ($count>0)
 	<tr><td colspan="5" align="center"><b>CONTACT: +92 335 XXXXXXX</b></td></tr>
 	<tr><td colspan="5" align="center"><b>WEBSITE: www.DBN-electronics.com</b></td></tr>
 	<tr><td colspan="5">&nbsp;</td></tr>
-
+	<br>
+	<br>
 	<tr>
 		<td colspan="5" align="center" style="font-size:14px;text-decoration:underline;">
 			<b>'.$report_title.'</b>
 		</td>
 	</tr>
+	<br>
+	<br>
 	<tr><td>&nbsp;</td></tr>
-	<tr>
-		<td colspan="2"><b>EMPLOYEE NAME: '.$user_name.'</b></td>
-		<td align="right" colspan="3"><b>BILL DT.: '.date("d-m-Y").'</b></td>
+	<tr>'.$employee_name.'
+		<td align="right" colspan="3"><b>PUBLISH DT.: '.date("d-m-Y").'</b></td>
 	</tr>
 	<tr>
-		<td colspan="3"><b>PHONE NUMBER: </b></td>
-		<td align="right" colspan="3"><b>BILL NO.: </b></td>
+		<td colspan="3"><b>PHONE NUMBER:'.$employee_data["phone"].' </b></td>
 	</tr>
-	<br></br>
+	<br>
+	<br>
+	<tr>
+		<td colspan="5" align="center" style="font-weight:bold;font-size:11px;">SALES</td>
+	</tr>
+	<tr>
+		<td colspan="5" align="center">
+			------------------------------------------------------------------------------------------------------------------------------
+		</td>
+	</tr>
+	<tr>
+		
+		<td colspan="1" style="font-weight:bold;font-size:11px;">YEAR: </td>
+		<td> '.$annual_sales.'</td>
+		<td></td>
+		<td  colspan="1" style="font-weight:bold;font-size:11px;">MONTH: </td>
+		<td > '.$monthly_sales.'</td>
+		
+	</tr>
+	<tr>
+		<td colspan="5" align="center">
+			-------------------------------------------------------------------------------------------------------------------------------
+		</td>
+	</tr>
+	<br>
+	<tr>
+		<td colspan="5" align="center" style="font-weight:bold;font-size:11px;">ORDERS</td>
+	</tr>
+	<tr>
+		<td colspan="5" align="center">
+			------------------------------------------------------------------------------------------------------------------------------
+		</td>
+	</tr>
+	<tr>
+		<td align="center" style="font-weight:bold;font-size:11px;">TOTAL ORDERS: </td>
+			<td> '.$total_orders.'</td>
+			
+	</tr>
+	<tr>
+		<td colspan="5" align="center">
+			-
+		</td>
+	</tr>
 	<tr>
 		<td colspan="5" align="center">
 			-------------------------------------------------------------------------------------------------------------------------------
@@ -104,8 +171,12 @@ if ($count>0)
 			// $inv_det_results = mysqli_query($con,$inv_det_query);    
 			// while($inv_det_data_row = mysqli_fetch_array($inv_det_results, MYSQLI_ASSOC))
 			// {
+			$total_quantity = 0;
+			$total_price = 0;
 			while($row = mysqli_fetch_assoc($report))
 			{
+			$total_quantity = $total_quantity + $row['units_sold'];
+			$total_price = $total_price + $row['extended_price'];
 			$content .= '
 			  <tr class="">
 				  <td align="center">
@@ -128,20 +199,28 @@ if ($count>0)
 			$content .= '
 			<tr>
 				<td colspan="5" align="center">
-					-------------------------------------------------------------------------------------------------------------------------------
+					------------------------------------------------------------------------------------------------------------------------------
 				</td>
 			</tr>
+			<tr style="font-weight:bold;font-size:11px;">
+				<td align="center">TOTAL: </td>
+				<td>&nbsp;</td>
+				<td align="center">'.$total_quantity.'</td>
+				<td>&nbsp;</td>
+				<td align="center">'.$total_price.'</td>
+			</tr>
+			
 			<tr><td colspan="2">&nbsp;</td></tr>
 			<tr><td colspan="2">&nbsp;</td></tr>
 			<tr style="font-size:10px;">
-				<td></td><td></td><td></td><td></td>
-				<td style="text-align:right;color: #252525;">
+				<td></td><td></td><td></td>
+				<td colspan="2" style="text-align:right;color: #252525;">
 					Printed by: '.$user_name.' &nbsp;&nbsp;&nbsp;
 				</td>
 			</tr>
 			<tr style="font-size:10px;">
-				<td></td><td></td><td></td><td></td>
-				<td style="text-align:right;color: #252525;">
+				<td></td><td></td><td></td>
+				<td colspan="2" style="text-align:right;color: #252525;">
 					On: '.date("d-m-Y").' &nbsp;&nbsp;&nbsp;
 				</td>
 			</tr>
