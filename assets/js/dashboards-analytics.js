@@ -443,7 +443,7 @@
   JSON.parse(orderStatistics).forEach(order => {
 
     names.push(order[0])
-    percentage.push(Math.round(order[3]))
+    percentage.push(Math.round(order[1]))
     count++
   });
   const MostSelling = Math.max(...percentage)
@@ -460,7 +460,7 @@
   dataLabels: {
     enabled: false,
     formatter: function (val, opt) {
-      return parseInt(val) + '%';
+      return parseInt(val);
     }
   },
   legend: {
@@ -478,7 +478,7 @@
             color: headingColor,
             offsetY: -15,
             formatter: function (val) {
-              return parseInt(val) + '%';
+              return parseInt(val);
             }
           },
           name: {
@@ -491,7 +491,7 @@
             color: axisColor,
             label: 'Highest',
             formatter: function (w) {
-              return MostSelling+'%';
+              return MostSelling;
             }
           }
         }

@@ -44,8 +44,14 @@ include_once('includes/header.php');
                               />
                             </div>
                           <?php
-                          $profit=getProfit();
-                          $profit_inc=round((($profit-getProfit('prev'))/$profit)*100,2);
+
+                          if( $_SESSION['role_as'] == '1') {
+                            $profit=getProfit();
+                            $profit_inc=round((($profit-getProfit('prev'))/$profit)*100,2);
+                          } else{
+                            $profit=getProfit(0, $_SESSION['auth_user']['userid']);
+                            $profit_inc=round((($profit-getProfit('prev', $_SESSION['auth_user']['userid']))/$profit)*100,2);
+                          }
                           ?>
                           </div>
                           <span class="fw-semibold d-block mb-1">Profit</span>
@@ -70,8 +76,13 @@ include_once('includes/header.php');
                             
                           </div>
                           <?php
-                          $sales=getSales();
-                          $sales_inc=round((($sales-getSales('prev'))/$sales)*100,2);
+                          if( $_SESSION['role_as'] == '1') {
+                            $sales=getSales();
+                            $sales_inc=round((($sales-getSales('prev'))/$sales)*100,2);
+                          }else{
+                            $sales=getSales(0, $_SESSION['auth_user']['userid']);
+                            $sales_inc=round((($sales-getSales('prev', $_SESSION['auth_user']['userid']))/$sales)*100,2);
+                          }
                           ?>
                           <span>Sales</span>
                           <h3 class="card-title text-nowrap mb-1">$<?= $sales ?></h3>
@@ -150,7 +161,7 @@ include_once('includes/header.php');
                     $order_and_sales = monthlySalesAndOrder();
                     $order_and_sales = mysqli_fetch_assoc($order_and_sales);
                     $order_statistics = order_statistics();
-                    $order_statisticschart = mysqli_fetch_all( order_statistics())
+                    $order_statisticschart = mysqli_fetch_all(order_statistics())
                     ?>
                     <div class="col-md-12 col-lg-12 col-xl-12 order-0 mb-4">
                         <div class="card">
@@ -171,25 +182,108 @@ include_once('includes/header.php');
                               <div id="orderStatisticsChart" value=""></div>
                             </div>
                             <div style="height:130px; overflow:auto">
-                              <ul class="p-0 m-0">
+                              <table id="myTable" class="p-0 m-0">
+                                <tr>
+                                  <th style="cursor:pointer" onclick="sortTable(0)">
+                                    Name
+                                  </th>
+                                  <th style="cursor:pointer" onclick="sortTable(1)">
+                                    Quantity
+                                  </th>
+                                  <th style="cursor:pointer"  onclick="sortTable(2)">
+                                    Sales
+                                  </th>
+                                </tr>
                                 <?php
                                   while($row = mysqli_fetch_assoc($order_statistics)){
                                 ?>
-                                <li class="d-flex mb-4 pb-1">
+                                <tr>
+                                <td class="mb-4 pb-1" style="width:150px; overflow-x:auto">
+                                <?= $row['product_name'] ?>
                                   
-                                  <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                      <h6 class="mb-0"><?= $row['product_name'] ?></h6>
-                                    </div>
-                                    <div class="user-progress">
-                                      <small class="fw-semibold"><?= $row['unit_sales'] ?></small>
-                                    </div>
-                                  </div>
-                                </li>
+                                  </td>
+                                  <td  class="mb-4 pb-1" style="width:100px; overflow-x:auto">
+                                  <?= $row['units_sold'] ?>
+                                  </td>
+                                <td  class="mb-4 pb-1">
+                                <?= $row['unit_sales'] ?>
+                                  
+                                  </td>
+                                </tr>
                                 <?php
                                 }
                                 ?>
-                              </ul>
+                              </table>
+                              
+<script defer>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  // Set the sorting direction to ascending:
+  dir = "desc"; 
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+    // Start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /* Loop through all table rows (except the
+    first, which contains table headers): */
+    for (i = 1; i < (rows.length - 1); i++) {
+      // Start by saying there should be no switching:
+      shouldSwitch = false;
+      /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /* Check if the two rows should switch place,
+      based on the direction, asc or desc: */
+      if (dir == "asc") {
+        if (isNaN(x.innerHTML) || isNaN(y.innerHTML)) { // check if the values are not numbers
+          if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            shouldSwitch = true;
+            break;
+          }
+        } else { // the values are numbers
+          if (parseFloat(x.innerHTML) > parseFloat(y.innerHTML)) {
+            shouldSwitch = true;
+            break;
+          }
+        }
+      } else if (dir == "desc") {
+        if (isNaN(x.innerHTML) || isNaN(y.innerHTML)) {
+          if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            shouldSwitch = true;
+            break;
+          }
+        } else {
+          if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+            shouldSwitch = true;
+            break;
+          }
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      // Each time a switch is done, increase this count by 1:
+      switchcount ++; 
+    } else {
+      /* If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again. */
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+
+</script>
                             </div>
                           </div>
                         </div>

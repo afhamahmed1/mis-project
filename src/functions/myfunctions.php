@@ -114,8 +114,13 @@ function order_statistics(){
     return mysqli_query($conn, $view_query);
 }
 
-function getSales($month=0)
+function getSales($month=0, $employee_id = '')
 {
+    $id="";
+    if ($employee_id != "")
+    {
+        $id="and employee_id=$employee_id";
+    }
     global $conn;
     $year=0;
     if ($month=='prev')
@@ -133,15 +138,20 @@ function getSales($month=0)
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()- $month)
-    AND YEAR(sales_order.order_date) = YEAR(CURDATE()- $year);
+    AND YEAR(sales_order.order_date) = YEAR(CURDATE()- $year) $id;
     ";
     $result=mysqli_query($conn, $view_query);
     $sales=mysqli_fetch_assoc($result);
     return $sales['monthly_sales'];
 }
 
-function getProfit($month=0) {
+function getProfit($month=0, $employee_id = '') {
     global $conn;
+    $id="";
+    if ($employee_id != "")
+    {
+        $id="and employee_id=$employee_id";
+    }
     $year=0;
     if ($month=='prev')
     {
@@ -158,7 +168,7 @@ function getProfit($month=0) {
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     WHERE MONTH(sales_order.order_date) = MONTH(CURDATE()-$month)
-    AND YEAR(sales_order.order_date) = YEAR(CURDATE()-$year);
+    AND YEAR(sales_order.order_date) = YEAR(CURDATE()-$year) $id;
     ";
     $result=mysqli_query($conn, $view_query);
     $profit=mysqli_fetch_assoc($result);
@@ -197,12 +207,12 @@ function manager_report($by = 'MONTH'){
         products.name AS product_name,
         SUM(order_items.quantity) AS units_sold,
         products.price as unit_price,
-        products.price*SUM(order_items.quantity) as extended_price
+        SUM(products.price*order_items.quantity) as extended_price
     FROM order_items
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     JOIN employees on employees.id = sales_order.employee_id
-    WHERE $format(sales_order.order_date) = $format(CURDATE())
+    WHERE $format(sales_order.order_date) = $format(CURDATE())  and YEAR(sales_order.order_date) = YEAR(CURRENT_DATE) 
     GROUP BY order_items.product_id;
     ";
     return mysqli_query($conn, $view_query);
@@ -217,13 +227,13 @@ function employee_report($id, $by = "MONTH"){
         products.name AS product_name,
         SUM(order_items.quantity) AS units_sold,
         products.price as unit_price,
-        products.price*SUM(order_items.quantity) as extended_price,
+        SUM(products.price*order_items.quantity) as extended_price,
         employees.name AS employee_name
     FROM order_items
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     JOIN employees on employees.id = sales_order.employee_id
-    WHERE $format(sales_order.order_date) = $format(CURDATE()) and employees.id = $id
+    WHERE $format(sales_order.order_date) = $format(CURDATE())  and YEAR(sales_order.order_date) = YEAR(CURRENT_DATE)  and  employees.id = $id
     GROUP BY order_items.product_id, sales_order.employee_id;
     ";
     return mysqli_query($conn, $view_query);
@@ -233,16 +243,17 @@ function fetchSalesStaffData(){
     global $conn;
     $view_query = "
     SELECT 
-        emp.id, 
-        emp.name, 
-        COALESCE(SUM(products.price*order_items.quantity),0) AS monthly_sales,
-        emp.monthly_target
-    FROM (SELECT * FROM employees where status = 0) as emp
-    LEFT JOIN sales_order ON sales_order.employee_id = emp.id AND MONTH(sales_order.order_date)= MONTH(NOW())-1 AND YEAR(sales_order.order_date) = YEAR(NOW())
-    LEFT JOIN order_items ON order_items.sales_order_id = sales_order.id
-    LEFT JOIN products ON products.id = order_items.product_id
-    GROUP BY emp.id
-    ORDER BY emp.id;
+   emp.id, 
+   emp.name, 
+   COALESCE(SUM(products.price*order_items.quantity),0) AS monthly_sales,
+   emp.monthly_target
+FROM (SELECT * FROM employees where status = 0) as emp
+LEFT JOIN sales_order ON sales_order.employee_id = emp.id 
+LEFT JOIN order_items ON order_items.sales_order_id = sales_order.id
+LEFT JOIN products ON products.id = order_items.product_id where
+MONTH(sales_order.order_date) = MONTH(CURDATE()) AND YEAR(sales_order.order_date) = YEAR(CURDATE())
+GROUP BY emp.id
+ORDER BY emp.id;
     ";
     return mysqli_query($conn, $view_query);
 }
@@ -296,9 +307,9 @@ function getTotalOrders($id="")
     $check_id="";
     if ($id != "")
     {
-        $check_id="where employee_id=$id";
+        $check_id="and employee_id=$id";
     }
-    $view_query = "select count(id) as count from sales_order $check_id";
+    $view_query = "select count(id) as count from sales_order where MONTH(sales_order.order_date) = MONTH(CURDATE()) AND YEAR(sales_order.order_date) = YEAR(CURDATE()) $check_id";
     $result=mysqli_query($conn, $view_query);
     $orders=mysqli_fetch_assoc($result)['count'];
     return $orders;
@@ -321,7 +332,7 @@ function calcCommission($id, $by="MONTH")
     $format = ($by == "MONTH") ? "MONTH" : "YEAR";
     $view_query = "
     SELECT 
-    products.price*SUM(order_items.quantity) as monthly_sales
+    SUM(products.price*order_items.quantity) as monthly_sales
     FROM order_items
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
@@ -332,7 +343,7 @@ function calcCommission($id, $by="MONTH")
     ";
     $result=mysqli_query($conn, $view_query);
     $monthly_sales=mysqli_fetch_assoc($result)['monthly_sales'];
-    $Comm=$monthly_sales*.01;
+    $Comm=$monthly_sales*.02;
     return $Comm;
 }
 function monthly_sales($id="")
@@ -345,7 +356,7 @@ function monthly_sales($id="")
     }
     $view_query="
     SELECT 
-    products.price*SUM(order_items.quantity) as monthly_sales
+    SUM(products.price*order_items.quantity) as monthly_sales
     FROM order_items
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
@@ -370,12 +381,12 @@ function annual_sales($id="")
 
     $view_query="
     SELECT 
-    products.price*SUM(order_items.quantity) as annual_sales
+    SUM(products.price*order_items.quantity) as annual_sales
     FROM order_items
     JOIN products ON order_items.product_id = products.id
     JOIN sales_order ON sales_order.id = order_items.sales_order_id
     JOIN employees on employees.id = sales_order.employee_id
-    WHERE sales_order.order_date > CURDATE()- INTERVAL 12 MONTH
+    WHERE YEAR(sales_order.order_date) = YEAR(CURDATE())
     $check_id;
     ";
     $result=mysqli_query($conn, $view_query);

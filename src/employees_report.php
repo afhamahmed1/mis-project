@@ -39,14 +39,14 @@ include_once('includes/header.php');
                       <table class="table table-hover">
                         <thead>
                           <tr>
-                            <th>Sales Person's ID</th>
-                            <th>Name</th>
-                            <th>Sales</th>
-                            <th>Monthly Objective</th>
-                            <th>Commission</th>
+                            <th >Sales Person's ID</th>
+                            <th >Name</th>
+                            <th >Sales</th>
+                            <th >Monthly Objective</th>
+                            <th >Commission</th>
                           </tr>
                         </thead>
-                        <tbody class="table-border-bottom-0 employee_report_table">
+                        <tbody id ="myTable" class="table-border-bottom-0 employee_report_table">
                           <?php
                             $sales_persons  = fetchSalesStaffData();
                              
@@ -56,11 +56,11 @@ include_once('includes/header.php');
                           ?>
                           <tr value="<?= $row['id'] ?>">
                             
-                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?= $row['id'] ?></strong></td>
-                            <td><?= $row['name'] ?></td>
-                            <td><?= $row['monthly_sales'] ?></td>
-                            <td><?= $row['monthly_target'] ?></td>
-                            <td><?= $row['monthly_sales']*(10/100) ?></td>
+                            <td ><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong><?= $row['id'] ?></strong></td>
+                            <td ><?= $row['name'] ?></td>
+                            <td ><?= $row['monthly_sales'] ?></td>
+                            <td ><?= $row['monthly_target'] ?></td>
+                            <td ><?= $row['monthly_sales']*(2/100) ?></td>
                             
                           </tr>
                           <?php 
@@ -94,6 +94,7 @@ include_once('includes/header.php');
     </div>
     <!-- / Layout wrapper -->
     <!-- employees_table.children[i].children[0].children[1].innerHTML -->
+
 
 <script>
     const employees_table = document.getElementsByClassName('employee_report_table')[0];
